@@ -1,0 +1,57 @@
+{% extends "base.html"%}
+{% block title %}LupaLens - мои заказы{% endblock %}
+{% block head %}
+  <!--meta property="og:image" content="https://cdn.pixabay.com/photo/2018/08/18/13/26/interface-3614766_960_720.png" /-->
+  <meta property="og:title" content="LupaLens - мои заказы">
+  <meta property="og:url" content="//www.lupalens.com/orders" />
+  <meta property="og:description" content="мои заказы" />
+  <link href="static/css/orders.css" rel="stylesheet">
+  <link href="static/css/table-responsive.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<div class="row" style="margin-top:5%; margin-right:15%;margin-left:15%;;">
+  {% with messages = get_flashed_messages() %}
+      {% if messages %}
+          {% for msg in  messages %}
+              <p>{{msg}}</p>
+          {% endfor %}
+      {% endif %}
+  {% endwith %}
+</div>
+<div class="row" style="margin-top:5%; margin-left:5%;">
+  <form method="POST" name="findorder" action="#">
+    {{form.hidden_tag()}}
+    {{form.order_id(placeholder="Введите Номер заказа",style="width: 180%;margin-bottom:5%",class="custom-input")}}</br>
+    {{form.submit(value="Найти заказ")}}
+  </form>
+</div>
+<div class="table-responsive">
+  {% for i in range (displayed_orders|length) %}
+  <label style="margin-top:2%; margin-left:4%"><b>Номер заказа:</b> {{displayed_orders[i]['displayed_order_number']}} </br> <b>Cтатус:</b> {{displayed_orders[i]['status']}} </label>
+      <table>
+
+      <thead>
+        <tr>
+          <th scope="col">Товар</th>
+          <th scope="col">Диоптрии</th>
+          <th scope="col">Кол-во</th>
+          <th scope="col">Цена</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in range (displayed_orders[i]['ordered_units']|length) %}
+          <tr>
+            <td>{{displayed_orders[i]['ordered_units'][s]['unit_name']}}</td>
+            <td>{{displayed_orders[i]['ordered_units'][s]['dio']}}</td>
+            <td>{{displayed_orders[i]['ordered_units'][s]['amount']}}</td>
+            <td>{{displayed_orders[i]['ordered_units'][s]['price']*displayed_orders[i]['ordered_units'][s]['amount']}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endfor %}
+</div>
+<div class="row" style="margin-bottom: 20%">
+
+</div>
+{% endblock %}

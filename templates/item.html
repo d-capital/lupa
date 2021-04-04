@@ -1,0 +1,114 @@
+{% extends "base.html"%}
+{% block title %}LupaLens - {{brand}} {{colour_name}}{% endblock %}
+{% block head %}
+  <!--meta property="og:image" content="https://cdn.pixabay.com/photo/2018/08/18/13/26/interface-3614766_960_720.png" /-->
+  <meta property="og:title" content="LupaLens - {{brand}} {{colour_name}}">
+  <meta property="og:url" content="//www.lupalens.com/{{item_name}}" />
+  <meta property="og:description" content="{{brand}} {{colour_name}}" />
+{% endblock %}
+{% block content %}
+<div class="col-lg-9">
+
+      <div class="card mt-4">
+        {% if image_paths is iterable %}
+
+        <div class="w3-content w3-display-container">
+          {% for i in image_paths  %}
+          <center><img class="mySlides" src="{{i['image_path']}}" style="width:50%"></center>
+          {% endfor %}
+          </br>
+
+          <center><button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+            <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button></center>
+        </div>
+
+        <script>
+        var slideIndex = 1;
+        showDivs(slideIndex);
+
+        function plusDivs(n) {
+          showDivs(slideIndex += n);
+        }
+
+        function showDivs(n) {
+          var i;
+          var x = document.getElementsByClassName("mySlides");
+          if (n > x.length) {slideIndex = 1}
+          if (n < 1) {slideIndex = x.length}
+          for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+          }
+          x[slideIndex-1].style.display = "block";
+        }
+        </script>
+        {% endif %}
+
+        <div class="card-body">
+          <h3 class="card-title">{{brand}} {{color_name}}</h3>
+          <h4><span name = "current_price">{{init_price}}</span> <span>рублей</span></h4>
+          <p class="card-text">
+            {% if brand == 'Alba Colors' %}
+              Влагосодержание: 43%</br>
+              Диаметр, мм: 14.20</br>
+              Радиус кривизны: 8.6</br>
+              Производитель: Alba Colors (Германия)</br>
+              Срок использования: {{replacement_frequency}}
+            {% elif brand == 'Medeo' %}
+              Влагосодержание: 40%</br>
+              Диаметр, мм: 14.20</br>
+              Радиус кривизны: 8.6</br>
+              Производитель: Medeo (Италия)</br>
+              Срок использования: {{replacement_frequency}}
+            {% elif brand == 'Urban Layer' %}
+              Влагосодержание: 40%</br>
+              Диаметр, мм: 14.20</br>
+              Радиус кривизны: 8.6</br>
+              Производитель: Urban Layer (Корея)</br>
+              Срок использования: {{replacement_frequency}}
+            {% endif %}
+          </p>
+
+          <div class="card_body">
+
+          </div>
+        </div>
+      </div>
+      <!-- /.card -->
+      <form action="#" method="POST" name="addtocart">
+        {{form.hidden_tag()}}
+
+      <div class="card card-outline-secondary my-4">
+        <div class="card-header">
+          <p style="float: center"><label class="card-text">Выберите диоптрии:</label>
+            <span class="text-warning">
+              {{form.dioptrics(onclick_="price_update()")}}
+            </span></p>
+          <p style="float: center"><label>Укажите, сколько вы хотите заказать линз: </label>
+            {{form.count(placeholder="1")}}</p>
+          <p style="float: center;margin-bottom: 0px;">{{form.submit(class_="btnfos btnfos-5",value="В КОРЗИНУ")}}</p>
+        </div>
+        <!--div class="card-body">
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+          <small class="text-muted">Posted by Anonymous on 3/1/17</small>
+          <hr>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+          <small class="text-muted">Posted by Anonymous on 3/1/17</small>
+          <hr>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+          <small class="text-muted">Posted by Anonymous on 3/1/17</small>
+          <hr>
+          <a href="#" class="btn btn-success">Leave a Review</a>
+        </div-->
+      </div>
+    </form>
+    <!--/.card -->
+    <table name = "price_dio" style="display:none">
+      {% for i in price_dio %}
+      <tr name = "{{i['dioptrics']}}">
+        <th>{{i['price']}}</th>
+      </tr>
+      {% endfor %}
+    </table>
+  <script src="/static/js/price_update.js"></script>
+</div>
+{% endblock %}

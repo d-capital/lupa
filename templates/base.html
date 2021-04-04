@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>{% block title %}{% endblock %}</title>
+  {% block head %}{% endblock %}
+
+  <!-- Bootstrap core CSS -->
+  <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="static/css/shop-homepage.css" rel="stylesheet">
+  <link href="static/css/shop-item.css" rel="stylesheet">
+  <link href="static/css/button.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="/">LupaLens</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">На Главную
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/my_orders">Мои Заказы</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Контакты</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/shopping_cart_page"><img src="/static/images/cart.png" width="30" height="30" style="width: 30px;"></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <div class="row">
+
+
+      <div class="col-lg-3">
+        {% if isshopcart == False%}
+        <h1 class="my-4">Цвета</h1>
+        <div class="list-group">
+          <a href="#" class="list-group-item-action">Голубые Линзы</a>
+          <a href="#" class="list-group-item-action">Серые Линзы</a>
+          <a href="#" class="list-group-item-action">Зеленые Линзы</a>
+          <a href="#" class="list-group-item-action">Карие Линзы</a>
+          <a href="#" class="list-group-item-action">Черные Линзы</a>
+        </div>
+        {% endif %}
+
+      </div>
+
+      <!-- /.col-lg-3 -->
+      {% block content %}{%endblock%}
+      <!--place for carousel-->
+      <!--place for shopping items-->
+
+      <!-- /.col-lg-9 -->
+
+    </div>
+    <!-- /.row -->
+
+  </div>
+  <!-- /.container -->
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; Your Website 2020</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="static/vendor/jquery/jquery.min.js"></script>
+  <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

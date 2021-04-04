@@ -1,0 +1,97 @@
+{% extends "base.html"%}
+{% block title %}LupaLens - Корзина{% endblock %}
+{% block head %}
+  <!--meta property="og:image" content="https://cdn.pixabay.com/photo/2018/08/18/13/26/interface-3614766_960_720.png" /-->
+  <meta property="og:title" content="LupaLens - Корзина">
+  <meta property="og:url" content="//www.lupalens.com/shopping_cart" />
+  <meta property="og:description" content="LupaLens - Корзина" />
+  <link href="static/css/shopping_cart.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+   <div class="row" style="margin-top:30px">
+    <form name="shoppingcartsubmit" action="#" method="POST">
+      {{form.hidden_tag()}}
+     <div class="col-lg-9">
+      <main>
+        <div class="basket">
+          <div class="basket-module">
+            <label for="promo-code">Введите промокод</label> </br>
+            {{form.promocode(class_="promo-code-field",id_="promocode")}}
+            <button class="promo-code-cta">Применить</button>
+          </div>
+          <div class="basket-labels">
+            <ul>
+              <li class="item item-heading">Товар</li>
+              <li class="price">Цена (шт)</li>
+              <li class="quantity">Кол-во</li>
+              <li class="subtotal">Стоимость</li>
+            </ul>
+          </div>
+          {% if cartitems is iterable %}
+            {% for i in range (cartitems|length) %}
+            <div class="basket-product">
+              <div class="item">
+                <div class="product-image">
+                  <img src="{{cartitems[i]['image_path']}}" alt="{{cartitems[i]['brand']}} {{cartitems[i]['color_name']}}" class="product-frame">
+                </div>
+                <div class="product-details">
+                  <h1><strong><!--span class="item-quantity"></span-->{{cartitems[i]['brand']}}</strong>
+                    {{cartitems[i]['color_name']}}</h1>
+                  <p>Диоптрии: {{cartitems[i]['dioptrics']}}</p>
+                  <input style="display:none" value="{{cartitems[i]['brand']}}" name="cart_items-{{i}}-brand" id="cart_items-{{i}}-brand">
+                  <input style="display:none" value="{{cartitems[i]['color_name']}}" name="cart_items-{{i}}-color_name" id="cart_items-{{i}}-color_name">
+                  <input style="display:none" value="{{cartitems[i]['dioptrics']}}" name="cart_items-{{i}}-dioptrics" id="cart_items-{{i}}-dioptrics">
+                  <input style="display:none" value="{{cartitems[i]['price']}}" name="cart_items-{{i}}-price" id="cart_items-{{i}}-price">
+                </div>
+              </div>
+              <div class="price">{{cartitems[i]['price']}}</div>
+              <div class="quantity">
+                <input type="number" value="{{cartitems[i]['amount']}}" min="1" class="quantity-field" id="cart_items-{{i}}-amount" name="cart_items-{{i}}-amount">
+              </div>
+              <div class="subtotal">{{cartitems[i]['price'] * cartitems[i]['amount']}}</div>
+              <div class="remove">
+                <button>Убрать</button>
+              </div>
+            </div>
+            {%endfor%}
+          {%endif%}
+
+        </div>
+        <aside>
+          <div class="summary">
+            <div class="row">
+              {{form.name_of_user(class_="custom-input", placeholder = "Введите свое имя", style="margin-bottom:30px")}}
+            </div>
+            <div class="row">
+              {{form.email(class_="custom-input", placeholder = "Введите свой e-mail", style="margin-bottom:30px")}}
+            </div>
+            <div class="row">
+              {{form.phone(class_="custom-input", placeholder = "Введите телефон (+7XXXXXXXXXX)", pattern="\+7\-[0-9]{3}\-[0-9]{3}\-[0-9]{2}\-[0-9]{2}", style="margin-bottom:30px")}}
+            </div>
+            <div class="row">
+              {{form.address(class_="custom-input", placeholder = "Введите адрес доставки")}}
+            </div>
+            </br>
+            <div class="summary-total-items"><span class="total-items"></span> товаров в корзине</div>
+            <div class="summary-total">
+              <div class="total-title">Общая стоимость</div>
+              <div class="total-value final-value" id="basket-total">{{total}}</div>
+            </div>
+            <div class="row" style="margin-left:5%">
+              <label for="pi_data"> {{form.pi_data}} <span style="margin-left:4%">Я согласен на передачу своих персональных данных</span></label>
+            </div>
+            <div class="summary-checkout">
+              {{form.submit(class_="checkout-cta", value="Отправить заказ")}}
+            </div>
+          </div>
+        </aside>
+      </main>
+     </div>
+    </form>
+   </div>
+<script src="/static/js/shopping_cart.js"></script>
+{% if form.errors %}
+{{ form.errors }}
+{% endif %}
+<div class="row" style="margin-top:35%"> Доставка производится только по России </div>
+{% endblock %}
