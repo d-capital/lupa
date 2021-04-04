@@ -195,6 +195,7 @@ def my_orders():
     isshopcart = True
     temp_uid = session.get("temp_uid", None)
     db_orders_seq_no = db.session.query(distinct(orders.seq_no)).filter(orders.temp_uuid == temp_uid).order_by(desc(orders.seq_no)).all()
+    db.session.close()
     displayed_orders = []
     status = None
     form = FindOrder()
@@ -202,6 +203,7 @@ def my_orders():
         order_seq_no = i[0]
         order_uid = db.session.query(orders.temp_uuid).filter(orders.temp_uuid == temp_uid, orders.seq_no == order_seq_no).first()
         db_status = db.session.query(orders.status).filter(orders.temp_uuid == temp_uid,orders.seq_no == order_seq_no).first()
+        db.session.close()
         if db_status[0] == 'P':
             status = 'В обработке'
         elif db_status[0] == 'D':
@@ -212,6 +214,7 @@ def my_orders():
         ordered_units=[]
         db_units = db.session.query(orders.brand, orders.color_name, orders.dioptrics, orders.amount,
                                    orders.price).filter(orders.temp_uuid == temp_uid, orders.seq_no == order_seq_no)
+        db.session.close()
         for i in db_units:
             unit = {'unit_name': i['brand']+" "+i['color_name'], 'dio': i['dioptrics'], 'amount': i['amount'], 'price': i['price']}
             ordered_units.append(unit)
