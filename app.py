@@ -22,7 +22,7 @@ driver = '{ODBC Driver 17 for SQL Server}'
 conn = ('DRIVER=' + driver + ';SERVER=' + server + ';PORT=1433;DATABASE=' + database + ';UID=' + username + ';PWD=' + password)
 params = urllib.parse.quote_plus(conn)
 conn_str = 'mssql+pyodbc:///?odbc_connect={}'.format(params)
-engine_azure = create_engine(conn_str, echo=True)
+#engine_azure = create_engine(conn_str, echo=True)
 
 #print('connection is ok')
 #print(engine_azure.table_names())
@@ -32,14 +32,14 @@ engine_azure = create_engine(conn_str, echo=True)
 app = Flask(__name__)
 app.config['CSRF_ENABLED'] = True
 app.secret_key = 'eksewgsdfd@fdsSFDF!234'
-app.config['SQLALCHEMY_DATABASE_URI'] = conn_str #'sqlite:///lenses.sqlite3'#
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lenses.sqlite3'#conn_str
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config.update(dict(PREFERRED_URL_SCHEME = 'https'))
 db = SQLAlchemy(app)
-sslify = SSLify(app)
+#sslify = SSLify(app)
 app.wsgi_app = ProxyFix(app.wsgi_app,x_proto=1, x_host=1)
-mail= Mail(app)
+#mail= Mail(app)
 app.config['MAIL_SERVER']='smtp.mail.ru'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'dzyuba.stanislaw@mail.ru'
@@ -213,10 +213,10 @@ def my_orders():
         displayed_order_number = str(order_seq_no) +"-"+ order_uid[0]
         ordered_units=[]
         db_units = db.session.query(orders.brand, orders.color_name, orders.dioptrics, orders.amount,
-                                   orders.price).filter(orders.temp_uuid == temp_uid, orders.seq_no == order_seq_no)
+                                   orders.price).filter(orders.temp_uuid == temp_uid, orders.seq_no == order_seq_no).all()
         db.session.close()
         for i in db_units:
-            unit = {'unit_name': i['brand']+" "+i['color_name'], 'dio': i['dioptrics'], 'amount': i['amount'], 'price': i['price']}
+            unit = {'unit_name': i.brand+" "+i.color_name, 'dio': i.dioptrics, 'amount': i.amount, 'price': i.price}
             ordered_units.append(unit)
         orderitem = {'displayed_order_number': displayed_order_number,'status': status, 'ordered_units': ordered_units}
         displayed_orders.append(orderitem)
