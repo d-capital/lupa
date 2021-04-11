@@ -37,7 +37,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config.update(dict(PREFERRED_URL_SCHEME = 'https'))
 db = SQLAlchemy(app)
-#sslify = SSLify(app)
+sslify = SSLify(app)
 app.wsgi_app = ProxyFix(app.wsgi_app,x_proto=1, x_host=1)
 #mail= Mail(app)
 app.config['MAIL_SERVER']='smtp.mail.ru'
