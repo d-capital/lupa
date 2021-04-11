@@ -9,15 +9,6 @@
   <link href="static/css/table-responsive.css" rel="stylesheet">
 {% endblock %}
 {% block content %}
-<div class="row" style="margin-top:5%; margin-right:15%;margin-left:15%;;">
-  {% with messages = get_flashed_messages() %}
-      {% if messages %}
-          {% for msg in  messages %}
-              <p>{{msg}}</p>
-          {% endfor %}
-      {% endif %}
-  {% endwith %}
-</div>
 <div class="row" style="margin-top:5%; margin-left:5%;">
   <form method="POST" name="findorder" action="#">
     {{form.hidden_tag()}}

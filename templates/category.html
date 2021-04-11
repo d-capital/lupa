@@ -1,0 +1,35 @@
+{% extends "base.html"%}
+{% block title %}LupaLens - {{category_displayed_name}}{% endblock %}
+{% block head %}
+  <!--meta property="og:image" content="https://cdn.pixabay.com/photo/2018/08/18/13/26/interface-3614766_960_720.png" /-->
+  <meta property="og:title" content="LupaLens - {{category_displayed_name}}">
+  <meta property="og:url" content="//www.lupalens.com/" />
+  <meta property="og:description" content="Заказывайте цветные линзы с диоптриями онлайн, премиальные марки, люксовые линзы." />
+{% endblock %}
+{% block content %}
+      <div class="col-lg-9" style="margin-top:3%">
+
+        <div class="row">
+          {% for i in range(items|length) %}
+          <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100">
+              <a href="#"><img class="card-img-top" src="{{items[i]['image_path']}}" alt=""></a>
+              <div class="card-body">
+                <h4 class="card-title">
+                  <a href="/item_{{items[i]['brand']}}+{{items[i]['color_name']}}">{{items[i]['brand']}} {{items[i]['color_name']}}</a>
+                </h4>
+                <h5>{{items[i]['price']}} рублей</h5>
+                <p class="card-text"></p>
+              </div>
+              <div class="card-footer"><center>
+                <a href="/item_{{items[i]['brand']}}+{{items[i]['color_name']}}" class="btnfos btnfos-5"><center>Купить</center></a></center>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+
+        </div>
+        <!-- /.row -->
+
+      </div>
+{% endblock %}

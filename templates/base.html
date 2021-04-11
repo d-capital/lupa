@@ -28,7 +28,7 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container">
-      <a class="navbar-brand" href="/">LupaLens</a>
+      <img src="/static/images/lupa-logo.jpg" style="border-radius:50%;width:5%;length:5%;margin-right:1%"><a class="navbar-brand" href="/">lupalens</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -42,11 +42,16 @@
           <li class="nav-item">
             <a class="nav-link" href="/my_orders">Мои Заказы</a>
           </li>
-          <li class="nav-item">
+          <!--li class="nav-item">
             <a class="nav-link" href="#">Контакты</a>
-          </li>
+          </li-->
+
           <li class="nav-item">
+            {% if db_cartitems %}
+            <a class="nav-link" href="/shopping_cart_page"><img src="/static/images/shopping-cart.png" width="30" height="30" style="width: 30px;"></a>
+            {% else %}
             <a class="nav-link" href="/shopping_cart_page"><img src="/static/images/cart.png" width="30" height="30" style="width: 30px;"></a>
+            {% endif %}
           </li>
         </ul>
       </div>
@@ -62,18 +67,26 @@
       <div class="col-lg-3">
         {% if isshopcart == False%}
         <h1 class="my-4">Цвета</h1>
+
         <div class="list-group">
-          <a href="#" class="list-group-item-action">Голубые Линзы</a>
-          <a href="#" class="list-group-item-action">Серые Линзы</a>
-          <a href="#" class="list-group-item-action">Зеленые Линзы</a>
-          <a href="#" class="list-group-item-action">Карие Линзы</a>
-          <a href="#" class="list-group-item-action">Черные Линзы</a>
+          {%for i in category_displayed_names%}
+            <a href="/category_{{i}}" class="list-group-item-action">{{category_displayed_names[i]}}</a>
+          {%endfor%}
         </div>
         {% endif %}
 
       </div>
 
       <!-- /.col-lg-3 -->
+      <div>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for msg in  messages %}
+                    <p style="margin-top:5%;margin-left:1%;margin-right:1%">{{msg}}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+      </div>
       {% block content %}{%endblock%}
       <!--place for carousel-->
       <!--place for shopping items-->
@@ -87,9 +100,9 @@
   <!-- /.container -->
 
   <!-- Footer -->
-  <footer class="py-5 bg-dark">
+  <footer class="py-5 bg-dark" style="margin-top:50%">
     <div class="container">
-      <p class="m-0 text-center text-white">Copyright &copy; Your Website 2020</p>
+      <p class="m-0 text-center text-white">Свяжитесь с нами по WhatsApp <a href="tel:+7 (905) 145-52-95">+7 (905) 145-52-95</a>  &copy; lupalens</p>
     </div>
     <!-- /.container -->
   </footer>

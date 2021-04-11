@@ -8,14 +8,14 @@
   <link href="static/css/shopping_cart.css" rel="stylesheet">
 {% endblock %}
 {% block content %}
-   <div class="row" style="margin-top:30px">
+   <div class="row" style="margin-top:2%">
     <form name="shoppingcartsubmit" action="#" method="POST">
       {{form.hidden_tag()}}
      <div class="col-lg-9">
       <main>
         <div class="basket">
           <div class="basket-module">
-            <label for="promo-code">Введите промокод</label> </br>
+            <label for="promocode">Введите промокод</label> </br>
             {{form.promocode(class_="promo-code-field",id_="promocode")}}
             <button class="promo-code-cta">Применить</button>
           </div>
@@ -27,7 +27,7 @@
               <li class="subtotal">Стоимость</li>
             </ul>
           </div>
-          {% if cartitems is iterable %}
+          {% if  cartitems and cartitems is iterable %}
             {% for i in range (cartitems|length) %}
             <div class="basket-product">
               <div class="item">
@@ -54,6 +54,8 @@
               </div>
             </div>
             {%endfor%}
+          {%else%}
+          <div>В вашей корзине пока нет товаров</div>
           {%endif%}
 
         </div>
@@ -74,15 +76,24 @@
             </br>
             <div class="summary-total-items"><span class="total-items"></span> товаров в корзине</div>
             <div class="summary-total">
-              <div class="total-title">Общая стоимость</div>
+              <div class="total-title">Общая стоимость (без учета доставки)</div>
               <div class="total-value final-value" id="basket-total">{{total}}</div>
             </div>
             <div class="row" style="margin-left:5%">
               <label for="pi_data"> {{form.pi_data}} <span style="margin-left:4%">Я согласен на передачу своих персональных данных</span></label>
             </div>
-            <div class="summary-checkout">
-              {{form.submit(class_="checkout-cta", value="Отправить заказ")}}
-            </div>
+
+              {% if cartitems %}
+                <div class="summary-checkout">
+                  {{form.submit(class_="checkout-cta", style="color:white",value="Отправить заказ")}}
+                </div>
+              {% else %}
+                <div class="summary-checkout" style="">
+                    {{form.submit(class_="checkout-cta", style="color:white;background-color:lightgray;",value="Отправить заказ", disabled = "disabled")}}
+                </div>
+              {% endif %}
+
+            <div style="">Доставка производится только по России</div>
           </div>
         </aside>
       </main>
@@ -90,8 +101,31 @@
     </form>
    </div>
 <script src="/static/js/shopping_cart.js"></script>
+<div style="color:red">
 {% if form.errors %}
-{{ form.errors }}
+  {% if form.errors['email'] %}
+  {%for i in form.errors['email']%}
+     {{i}}
+  {% endfor %}
+  </br>
+  {% endif %}
+  {%if form.errors['name_of_user']%}
+  {%for i in form.errors['name_of_user']%}
+     {{i}}
+  {% endfor %}
+  <br>
+  {% endif %}
+  {%if form.errors['name_of_user']%}
+  {%for i in form.errors['address']%}
+     {{i}}
+  {% endfor %}
+  <br>
+  {% endif %}
+  {% if form.errors['phone']%}
+  {%for i in form.errors['phone']%}
+    {{i}}
+  {% endfor %}
+  {% endif %}
 {% endif %}
-<div class="row" style="margin-top:35%"> Доставка производится только по России </div>
+</div>
 {% endblock %}

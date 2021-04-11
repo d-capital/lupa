@@ -22,7 +22,7 @@ driver = '{ODBC Driver 17 for SQL Server}'
 conn = ('DRIVER=' + driver + ';SERVER=' + server + ';PORT=1433;DATABASE=' + database + ';UID=' + username + ';PWD=' + password)
 params = urllib.parse.quote_plus(conn)
 conn_str = 'mssql+pyodbc:///?odbc_connect={}'.format(params)
-#engine_azure = create_engine(conn_str, echo=True)
+engine_azure = create_engine(conn_str, echo=True)
 
 #print('connection is ok')
 #print(engine_azure.table_names())
@@ -32,7 +32,7 @@ conn_str = 'mssql+pyodbc:///?odbc_connect={}'.format(params)
 app = Flask(__name__)
 app.config['CSRF_ENABLED'] = True
 app.secret_key = 'eksewgsdfd@fdsSFDF!234'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lenses.sqlite3'#conn_str
+app.config['SQLALCHEMY_DATABASE_URI'] = conn_str #'sqlite:///lenses.sqlite3'#
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config.update(dict(PREFERRED_URL_SCHEME = 'https'))
@@ -55,9 +55,15 @@ from forms import AddToCart, ShoppCartItem, ShoppingCartSubmit, FindOrder
 def home():
     isshopcart = False
     temp_uid = session.get("temp_uid", None)
+    category_displayed_names = {'blue': 'Голубые Линзы', 'gray': 'Серые Линзы', 'green': 'Зеленые Линзы',
+                                'brown': 'Карие Линзы', 'black': 'Черные Линзы'}
     if temp_uid == None:
         temp_uid = uuid.uuid4().hex
         session["temp_uid"] = temp_uid
+        db_cartitems = None
+    else:
+        db_cartitems = db.session.query(shopping_cart).filter(shopping_cart.temp_uuid == temp_uid).all()
+        db.session.close()
     db_displayed_lens = db.session.query(lenses.brand,lenses.color_name,lenses.price).filter().order_by(desc(lenses.stock)).limit(6).all()
     db.session.close()
     displayed_lenses = []
@@ -70,7 +76,39 @@ def home():
         displayed_lenses.append(item)
     items = displayed_lenses
 
-    return render_template("index.html", items = displayed_lenses, isshopcart=isshopcart)
+    return render_template("index.html", items = displayed_lenses, isshopcart=isshopcart,
+                           db_cartitems = db_cartitems, category_displayed_names=category_displayed_names)
+
+@app.route("/category_<category_name>", methods=["POST", "GET"])
+def category(category_name):
+    category_displayed_names = {'blue':'Голубые Линзы','gray':'Серые Линзы','green':'Зеленые Линзы',
+    'brown':'Карие Линзы','black':'Черные Линзы'}
+    category_displayed_name = category_displayed_names[category_name]
+    isshopcart = False
+    temp_uid = session.get("temp_uid", None)
+    if temp_uid == None:
+        temp_uid = uuid.uuid4().hex
+        session["temp_uid"] = temp_uid
+        db_cartitems = None
+    else:
+        db_cartitems = db.session.query(shopping_cart).filter(shopping_cart.temp_uuid == temp_uid).all()
+        db.session.close()
+    db_displayed_lens = db.session.query(lenses.brand,lenses.color_name,lenses.price).filter(lenses.color_category == category_name).distinct().all()
+    db.session.close()
+    displayed_lenses = []
+    for each in range(len(db_displayed_lens)):
+        db_image_path = db.session.query(lens_images.image_path).filter(
+            lens_images.brand == str(db_displayed_lens[each][0]), lens_images.color_name == str(db_displayed_lens[each][1]),
+            lens_images.display_order == 1).first()
+        item = {"brand": str(db_displayed_lens[each][0]),"color_name": str(db_displayed_lens[each][1]),
+                "price": str(db_displayed_lens[each][2]), "image_path": str(db_image_path[0])}
+        displayed_lenses.append(item)
+    items = displayed_lenses
+
+    return render_template("category.html", items = displayed_lenses, isshopcart=isshopcart,
+                           category_displayed_name=category_displayed_name,
+                           category_displayed_names = category_displayed_names, db_cartitems=db_cartitems)
+
 
 
 @app.route("/item_<item_name>", methods=["POST", "GET"])
@@ -80,6 +118,12 @@ def item(item_name):
     if temp_uid == None:
         temp_uid = uuid.uuid4().hex
         session["temp_uid"] = temp_uid
+        db_cartitems = None
+    else:
+        db_cartitems = db.session.query(shopping_cart).filter(shopping_cart.temp_uuid == temp_uid).all()
+        db.session.close()
+    category_displayed_names = {'blue': 'Голубые Линзы', 'gray': 'Серые Линзы', 'green': 'Зеленые Линзы',
+                                    'brown': 'Карие Линзы', 'black': 'Черные Линзы'}
     image_path = 'http://placehold.it/900x400'
     item = item_name.split("+")
     brand = item[0]
@@ -127,7 +171,9 @@ def item(item_name):
     else:
         return render_template("item.html", brand = brand, color_name = color_name, price_dio = price_dio,
                            init_price = init_price, replacement_frequency=replacement_frequency,
-                            image_paths = image_paths,form = form, isshopcart=isshopcart)
+                            image_paths = image_paths,form = form, isshopcart=isshopcart,
+                               category_displayed_names=category_displayed_names,
+                               db_cartitems=db_cartitems)
 
 @app.route("/shopping_cart_page", methods=["POST", "GET"])
 def shopping_cart_page():
@@ -182,13 +228,13 @@ def shopping_cart_page():
                 db.session.delete(each)
                 db.session.commit()
                 db.session.close()
-        msg = Message('lupa: новый заказ с сайта', sender='dzyuba.stanislaw@mail.ru', recipients=['dzyuba.stanislaw@mail.ru'])
+        msg = Message('lupa: новый заказ с сайта', sender='dzyuba.stanislaw@mail.ru', recipients=['k.tsenilova@mail.ru'])
         msg.body = "#:{}".format(str(seq_no)+'-'+temp_uid)+"; "+ "email: {}".format(email)+" ;address: {}".format(address)\
                    + " ;phone: {}".format(phone)+" ;promo: {}".format(promo)+ " ;cartitems: {}".format(cartitems)
         mail.send(msg)
-        flash('Ваш заказ создан, пожалуйста, запишите первый номер заказа ниже, мы свяжемся с вами в ближайшее время', 'info')
+        flash('Ваш заказ создан, пожалуйста, запишите номер заказа ниже, мы свяжемся с вами в ближайшее время', 'info')
         return redirect("/my_orders")
-    return render_template("shopping_cart_page.html", isshopcart=isshopcart, cartitems=cartitems, form=form, total=total)
+    return render_template("shopping_cart_page.html", isshopcart=isshopcart, cartitems=cartitems, form=form, total=total, db_cartitems = db_cartitems)
 
 @app.route("/my_orders", methods=["POST", "GET"])
 def my_orders():
@@ -199,6 +245,11 @@ def my_orders():
     displayed_orders = []
     status = None
     form = FindOrder()
+    if db_orders_seq_no:
+        db_cartitems = db.session.query(shopping_cart).filter(shopping_cart.temp_uuid == temp_uid).all()
+        db.session.close()
+    else:
+        db_cartitems = None
     for i in db_orders_seq_no:
         order_seq_no = i[0]
         order_uid = db.session.query(orders.temp_uuid).filter(orders.temp_uuid == temp_uid, orders.seq_no == order_seq_no).first()
@@ -224,4 +275,5 @@ def my_orders():
         order_id = form.order_id.data.split(sep="-")
         session["temp_uid"] = order_id[1]
         return redirect("/my_orders")
-    return render_template("my_orders.html", orders=orders, isshopcart=isshopcart, displayed_orders = displayed_orders, form=form)
+    return render_template("my_orders.html", orders=orders, isshopcart=isshopcart, displayed_orders = displayed_orders, form=form,
+                           db_cartitems=db_cartitems)

@@ -297,6 +297,7 @@ aside {
 
 .summary-checkout {
   display: block;
+  background-color:green;
 }
 
 .checkout-cta {
@@ -307,6 +308,7 @@ aside {
   text-transform: uppercase;
   padding: 0.625rem 0;
   width: 100%;
+  background-color:green;
 }
 
 .summary-delivery-selection {
