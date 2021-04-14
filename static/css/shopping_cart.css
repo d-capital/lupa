@@ -57,12 +57,12 @@ button,
   float: left;
 }
 
-.price:before,
-.subtotal:before,
-.subtotal-value:before,
-.total-value:before,
+.price:after,
+.subtotal:after,
+.subtotal-value:after,
+.total-value:after,
 .promo-value:before {
-  content: '₽';
+  content: ' ₽';
 }
 
 .hide {

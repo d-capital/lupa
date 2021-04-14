@@ -1,5 +1,5 @@
 {% extends "base.html"%}
-{% block title %}LupaLens - {{brand}} {{colour_name}}{% endblock %}
+{% block title %}lupalens - {{brand}} {{colour_name}}{% endblock %}
 {% block head %}
   <!--meta property="og:image" content="https://cdn.pixabay.com/photo/2018/08/18/13/26/interface-3614766_960_720.png" /-->
   <meta property="og:title" content="LupaLens - {{brand}} {{colour_name}}">
@@ -45,7 +45,7 @@
 
         <div class="card-body">
           <h3 class="card-title">{{brand}} {{color_name}}</h3>
-          <h4><span name = "current_price">{{init_price}}</span> <span>рублей</span></h4>
+          <h4><span name = "current_price">{{init_price}}</span> <span>₽</span></h4>
           <p class="card-text">
             {% if brand == 'Alba Colors' %}
               Влагосодержание: 43%</br>

@@ -16,29 +16,6 @@ $(document).ready(function() {
   updateSumItems();
 });
 
-$('.promo-code-cta').click(function() {
-
-  promoCode = $('#promo-code').val();
-
-  if (promoCode == '10off' || promoCode == '10OFF') {
-    //If promoPrice has no value, set it as 10 for the 10OFF promocode
-    if (!promoPrice) {
-      promoPrice = 10;
-    } else if (promoCode) {
-      promoPrice = promoPrice * 1;
-    }
-  } else if (promoCode != '') {
-    alert("Invalid Promo Code");
-    promoPrice = 0;
-  }
-  //If there is a promoPrice that has been set (it means there is a valid promoCode input) show promo
-  if (promoPrice) {
-    $('.summary-promo').removeClass('hide');
-    $('.promo-value').text(promoPrice.toFixed(2));
-    recalculateCart(true);
-  }
-});
-
 /* Recalculate cart */
 function recalculateCart(onlyTotal) {
   var subtotal = 0;
@@ -49,7 +26,7 @@ function recalculateCart(onlyTotal) {
   });
 
   /* Calculate totals */
-  var total = subtotal;
+  var total = Math.round(subtotal);
 
   //If there is a valid promoCode, and subtotal < 10 subtract from total
   var promoPrice = parseFloat($('.promo-value').text());
@@ -66,14 +43,14 @@ function recalculateCart(onlyTotal) {
   if (onlyTotal) {
     /* Update total display */
     $('.total-value').fadeOut(fadeTime, function() {
-      $('#basket-total').html(total.toFixed(2));
+      $('#basket-total').html(Math.round(total));
       $('.total-value').fadeIn(fadeTime);
     });
   } else {
     /* Update summary display. */
     $('.final-value').fadeOut(fadeTime, function() {
-      $('#basket-subtotal').html(subtotal.toFixed(2));
-      $('#basket-total').html(total.toFixed(2));
+      $('#basket-subtotal').html(Math.round(subtotal));
+      $('#basket-total').html(Math.round(subtotal));
       if (total == 0) {
         $('.checkout-cta').fadeOut(fadeTime);
       } else {
@@ -95,7 +72,7 @@ function updateQuantity(quantityInput) {
   /* Update line price display and recalc cart totals */
   productRow.children('.subtotal').each(function() {
     $(this).fadeOut(fadeTime, function() {
-      $(this).text(linePrice.toFixed(2));
+      $(this).text(Math.round(linePrice));
       recalculateCart();
       $(this).fadeIn(fadeTime);
     });
@@ -110,7 +87,7 @@ function updateSumItems() {
   $('.quantity input').each(function() {
     sumItems += parseInt($(this).val());
   });
-  $('.total-items').text(sumItems);
+  $('.total-items').text(Math.round(sumItems));
 }
 
 /* Remove item from cart */

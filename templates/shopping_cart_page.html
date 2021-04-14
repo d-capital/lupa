@@ -1,5 +1,5 @@
 {% extends "base.html"%}
-{% block title %}LupaLens - Корзина{% endblock %}
+{% block title %}lupalens - Корзина{% endblock %}
 {% block head %}
   <!--meta property="og:image" content="https://cdn.pixabay.com/photo/2018/08/18/13/26/interface-3614766_960_720.png" /-->
   <meta property="og:title" content="LupaLens - Корзина">
@@ -22,9 +22,9 @@
           <div class="basket-labels">
             <ul>
               <li class="item item-heading">Товар</li>
-              <li class="price">Цена (шт)</li>
+              <li>Цена (шт)</li>
               <li class="quantity">Кол-во</li>
-              <li class="subtotal">Стоимость</li>
+              <li>Стоимость</li>
             </ul>
           </div>
           {% if  cartitems and cartitems is iterable %}

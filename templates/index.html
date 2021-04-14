@@ -1,5 +1,5 @@
 {% extends "base.html"%}
-{% block title %}LupaLens - заказывайте линзы онлайн по всей России{% endblock %}
+{% block title %}lupalens - заказывайте линзы онлайн по всей России{% endblock %}
 {% block head %}
   <!--meta property="og:image" content="https://cdn.pixabay.com/photo/2018/08/18/13/26/interface-3614766_960_720.png" /-->
   <meta property="og:title" content="LupaLens - линзы онлайн">
@@ -45,7 +45,7 @@
                 <h4 class="card-title">
                   <a href="/item_{{items[i]['brand']}}+{{items[i]['color_name']}}">{{items[i]['brand']}} {{items[i]['color_name']}}</a>
                 </h4>
-                <h5>{{items[i]['price']}} рублей</h5>
+                <h5>{{items[i]['price']}} ₽</h5>
                 <p class="card-text"></p>
               </div>
               <div class="card-footer"><center>

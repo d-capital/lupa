@@ -32,7 +32,7 @@ engine_azure = create_engine(conn_str, echo=True)
 app = Flask(__name__)
 app.config['CSRF_ENABLED'] = True
 app.secret_key = 'eksewgsdfd@fdsSFDF!234'
-app.config['SQLALCHEMY_DATABASE_URI'] = conn_str #'sqlite:///lenses.sqlite3'#
+app.config['SQLALCHEMY_DATABASE_URI'] = conn_str #'sqlite:///lenses.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config.update(dict(PREFERRED_URL_SCHEME = 'https'))
@@ -72,7 +72,7 @@ def home():
             lens_images.brand == str(db_displayed_lens[each][0]), lens_images.color_name == str(db_displayed_lens[each][1]),
             lens_images.display_order == 1).first()
         item = {"brand": str(db_displayed_lens[each][0]),"color_name": str(db_displayed_lens[each][1]),
-                "price": str(db_displayed_lens[each][2]), "image_path": str(db_image_path[0])}
+                "price": str(round(db_displayed_lens[each][2])), "image_path": str(db_image_path[0])}
         displayed_lenses.append(item)
     items = displayed_lenses
 
@@ -101,7 +101,7 @@ def category(category_name):
             lens_images.brand == str(db_displayed_lens[each][0]), lens_images.color_name == str(db_displayed_lens[each][1]),
             lens_images.display_order == 1).first()
         item = {"brand": str(db_displayed_lens[each][0]),"color_name": str(db_displayed_lens[each][1]),
-                "price": str(db_displayed_lens[each][2]), "image_path": str(db_image_path[0])}
+                "price": str(round(db_displayed_lens[each][2])), "image_path": str(db_image_path[0])}
         displayed_lenses.append(item)
     items = displayed_lenses
 
@@ -140,7 +140,7 @@ def item(item_name):
     db_price_dio = db.session.query(lenses.price,lenses.dioptrics).filter(lenses.brand == brand,
                                                                           lenses.color_name == color_name).order_by(desc(lenses.dioptrics)).all()
     for i in range(len(db_price_dio)):
-        pair = {"price": str(db_price_dio[i][0]), "dioptrics": str(db_price_dio[i][1])}
+        pair = {"price": str(round(db_price_dio[i][0])), "dioptrics": str(db_price_dio[i][1])}
         price_dio.append(pair)
     db_dio = db.session.query(lenses.dioptrics).filter(lenses.brand == brand,
                                                                            lenses.color_name == color_name).order_by(desc(lenses.dioptrics)).all()
@@ -195,7 +195,7 @@ def shopping_cart_page():
             lens_images.display_order == 1).first()
             cartitem = {'brand': str(db_cartitems[i].brand), 'color_name': str(db_cartitems[i].color_name),
                         'dioptrics': str(db_cartitems[i].dioptrics), 'amount': int(db_cartitems[i].amount),
-                        'price': int(price[0]), 'image_path':str(image_path[0])}
+                        'price': round(int(price[0])), 'image_path':str(image_path[0])}
             cartitems.append(cartitem)
         for i in cartitems:
             subtotal = i['amount'] * i['price']
@@ -267,13 +267,17 @@ def my_orders():
                                    orders.price).filter(orders.temp_uuid == temp_uid, orders.seq_no == order_seq_no).all()
         db.session.close()
         for i in db_units:
-            unit = {'unit_name': i.brand+" "+i.color_name, 'dio': i.dioptrics, 'amount': i.amount, 'price': i.price}
+            unit = {'unit_name': i.brand+" "+i.color_name, 'dio': i.dioptrics, 'amount': i.amount, 'price': round(i.price)}
             ordered_units.append(unit)
         orderitem = {'displayed_order_number': displayed_order_number,'status': status, 'ordered_units': ordered_units}
         displayed_orders.append(orderitem)
     if form.validate_on_submit():
         order_id = form.order_id.data.split(sep="-")
-        session["temp_uid"] = order_id[1]
+        try:
+            to_find = order_id[1]
+        except:
+            to_find = order_id[0]
+        session["temp_uid"] = to_find
         return redirect("/my_orders")
     return render_template("my_orders.html", orders=orders, isshopcart=isshopcart, displayed_orders = displayed_orders, form=form,
                            db_cartitems=db_cartitems)
