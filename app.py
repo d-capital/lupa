@@ -32,7 +32,7 @@ engine_azure = create_engine(conn_str, echo=True)
 app = Flask(__name__)
 app.config['CSRF_ENABLED'] = True
 app.secret_key = 'eksewgsdfd@fdsSFDF!234'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lenses.sqlite3' #conn_str
+app.config['SQLALCHEMY_DATABASE_URI'] = conn_str #'sqlite:///lenses.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config.update(dict(PREFERRED_URL_SCHEME = 'https'))
