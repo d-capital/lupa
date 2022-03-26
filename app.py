@@ -22,7 +22,7 @@ driver = '{ODBC Driver 17 for SQL Server}'
 conn = ('DRIVER=' + driver + ';SERVER=' + server + ';PORT=1433;DATABASE=' + database + ';UID=' + username + ';PWD=' + password)
 params = urllib.parse.quote_plus(conn)
 conn_str = 'mssql+pyodbc:///?odbc_connect={}'.format(params)
-#engine_azure = create_engine(conn_str, echo=True)
+engine_azure = create_engine(conn_str, echo=True)
 
 #print('connection is ok')
 #print(engine_azure.table_names())
@@ -32,7 +32,7 @@ conn_str = 'mssql+pyodbc:///?odbc_connect={}'.format(params)
 app = Flask(__name__)
 app.config['CSRF_ENABLED'] = True
 app.secret_key = 'eksewgsdfd@fdsSFDF!234'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lenses.sqlite3' #conn_str
+app.config['SQLALCHEMY_DATABASE_URI'] = conn_str #'sqlite:///lenses.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config.update(dict(PREFERRED_URL_SCHEME = 'https'))
