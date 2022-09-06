@@ -43,7 +43,7 @@ app.wsgi_app = ProxyFix(app.wsgi_app,x_proto=1, x_host=1)
 app.config['MAIL_SERVER']='smtp.mail.ru'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'dzyuba.stanislaw@mail.ru'
-app.config['MAIL_PASSWORD'] = 'L$UF=t;%_nxz%8T'
+app.config['MAIL_PASSWORD'] = 'qzj2tiX3dMEb2TsxYtbn'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)

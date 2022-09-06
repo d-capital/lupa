@@ -2,9 +2,10 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField,SubmitField,Form,IntegerField,SelectField,BooleanField,DateField,\
     FormField,FieldList, FloatField
 from wtforms.validators import DataRequired,length, NumberRange, Email, Length, ValidationError
-from wtforms.fields.html5 import EmailField, TelField
+from wtforms.fields import EmailField, TelField
 from wtforms import validators
 import phonenumbers
+import email_validator
 
 class AddToCart(FlaskForm):
     dioptrics = SelectField('dioptric', validators=[DataRequired()])
